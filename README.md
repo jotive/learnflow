@@ -36,8 +36,16 @@ docker compose up
 # frontend → http://localhost:3000
 ```
 
-Seed data creates one leader and two members for the demo (credentials printed by the
-seed step). The full endpoint reference is the OpenAPI schema served at
+Seed data creates demo accounts and one learning path ("Backend onboarding", 4
+activities assigned to a member — 25% progress, not yet compliant):
+
+| Account | Email | Password |
+|---|---|---|
+| Leader | `leader@learnflow.dev` | `leader-pass` |
+| Member | `member1@learnflow.dev` | `member-pass` |
+| Member | `member2@learnflow.dev` | `member-pass` |
+
+The full endpoint reference is the OpenAPI schema served at
 `http://localhost:8000/docs` — generated from the code, always current.
 
 ## Domain model
