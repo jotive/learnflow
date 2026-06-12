@@ -1,14 +1,37 @@
-# LearnFlow
+<div align="center">
 
-Gestor de rutas de aprendizaje corporativo. Permite a un líder de L&D crear rutas de
-aprendizaje, agregar actividades, asignar miembros, exigir la finalización de lo
-obligatorio y seguir el progreso sin hojas de cálculo.
+# 🎓 LearnFlow
 
-La distinción central del producto es **cumplimiento != 100% completado**. Una ruta puede
-tener actividades opcionales pendientes y aun así estar en cumplimiento cuando toda
-actividad obligatoria está completada.
+**Gestor de rutas de aprendizaje corporativo.**
+Un líder de L&D crea rutas, agrega actividades, asigna miembros, exige lo obligatorio
+y sigue el progreso — sin hojas de cálculo.
 
-## Stack
+[![CI](https://github.com/jotive/learnflow/actions/workflows/ci.yml/badge.svg)](https://github.com/jotive/learnflow/actions/workflows/ci.yml)
+&nbsp;![coverage](https://img.shields.io/badge/coverage-96%25-brightgreen)
+&nbsp;![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+&nbsp;![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+&nbsp;![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+&nbsp;![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+&nbsp;![code style: black](https://img.shields.io/badge/code%20style-black-000000)
+
+</div>
+
+> [!NOTE]
+> **Cumplimiento ≠ 100% completado.** Una ruta puede tener actividades opcionales
+> pendientes y aun así estar *en cumplimiento* cuando toda actividad **obligatoria**
+> está completada. Esa distinción es el corazón del producto.
+
+## ✨ Características
+
+- 🔐 **Roles y permisos** — `LEADER` gestiona rutas y firma finalización; `MEMBER` solo actualiza lo asignado.
+- 🧩 **Arquitectura limpia / hexagonal** — dominio puro, casos de uso por acción, puertos inyectados.
+- 🌐 **Errores localizados** — contrato `{code, message}` resuelto por `Accept-Language` (`es`/`en`).
+- 📊 **Progreso vs. cumplimiento** — `progress_percentage` e `is_compliant` como conceptos distintos.
+- 📬 **Puerto `Notifier`** — adaptador de email desacoplado (log activo; SES/Resend de ejemplo).
+- 🐳 **Un solo comando** — `docker compose up` encadena `db → migrate → backend → frontend`.
+- ✅ **Calidad en CI** — ruff, black, isort, pytest con gate de cobertura ≥75%.
+
+## 🧱 Stack
 
 - Backend: Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2.0, PostgreSQL 16, Alembic
 - Frontend: React 19, Vite, Tailwind CSS, Zustand (gestor de paquetes Bun)
@@ -20,7 +43,7 @@ Detalle del backend (arquitectura, variables de entorno, pruebas, migraciones) e
 [`backend/README.md`](backend/README.md). Notas de CI/CD y versionado de
 toolchain en [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
-## Requisitos previos
+## 📦 Requisitos previos
 
 La vía recomendada es Docker: no necesitas Python ni Node instalados localmente.
 
@@ -47,7 +70,7 @@ En Windows, instalar Make con `winget install GnuWin32.Make` o `choco install ma
 Make, ejecutar los comandos `docker compose ...` directamente (la columna equivalente está
 en cada sección).
 
-## Ejecución con Docker (recomendado)
+## 🚀 Ejecución con Docker (recomendado)
 
 Un solo comando levanta todo en orden. Compose encadena los servicios con healthchecks:
 `db` (espera a estar sano) -> `migrate` (corre Alembic y siembra datos) -> `backend` ->
@@ -71,7 +94,7 @@ Documentación del backend:
 http://localhost:8000/docs
 ```
 
-## Instalación local (sin Docker)
+## 🛠️ Instalación local (sin Docker)
 
 Para iterar el backend con el intérprete del host:
 
@@ -92,7 +115,8 @@ docker compose run --rm migrate                             # 2. migraciones + s
 cd backend && .venv/Scripts/python.exe -m uvicorn app.main:app --reload   # 3. API
 ```
 
-Usuarios semilla:
+> [!TIP]
+> Usuarios semilla listos para entrar (creados por el seed):
 
 | Rol | Email | Contraseña |
 |---|---|---|
@@ -100,7 +124,7 @@ Usuarios semilla:
 | MEMBER | `member1@learnflow.dev` | `member-pass` |
 | MEMBER | `member2@learnflow.dev` | `member-pass` |
 
-## Ejecución de pruebas
+## 🧪 Ejecución de pruebas
 
 ```bash
 cd backend
@@ -111,7 +135,7 @@ cd backend
 
 La cobertura se exige en `backend/pytest.ini` con `--cov-fail-under=75`.
 
-## Mapeo de requisitos del PDF
+## 🗺️ Mapeo de requisitos del PDF
 
 La prueba plantea un gestor genérico de "listas de tareas" y "tareas". En lugar de un CRUD
 abstracto, lo presento como un producto con dominio propio: **LearnFlow**, un gestor de
@@ -122,7 +146,7 @@ funcional uno a uno:
 |---|---|---|
 | Lista de tareas | Ruta de aprendizaje (`path`) | Una ruta agrupa actividades como una lista agrupa tareas |
 | Tarea | Actividad (`activity`) | Unidad de trabajo dentro de la ruta |
-| Estado de tarea | Estado de actividad | `PENDING` / `IN_PROGRESS` / `COMPLETED` |
+| Estado de tarea | Estado de actividad | `NOT_STARTED` / `IN_PROGRESS` / `COMPLETED` |
 | Porcentaje de completitud | `progress_percentage` | Actividades completadas sobre el total |
 
 Todos los endpoints se sirven bajo el prefijo de versión `/api/v1` (la tabla lo omite por
@@ -138,7 +162,7 @@ brevedad; p. ej. `POST /paths` es `POST /api/v1/paths`).
 | Bonus: asignar usuario a tarea | `POST /activities/{id}/assign` |
 | Bonus: notificación de email simulada | Puerto `Notifier` con implementación que registra en log |
 
-## Convenciones de la API
+## 📐 Convenciones de la API
 
 ### Versionado
 
@@ -181,7 +205,7 @@ Los errores de dominio devuelven un `code` estable e independiente del idioma m�
 El idioma de `message` se resuelve desde el header `Accept-Language` (`es` por defecto,
 `en` disponible). Los clientes se ramifican por `code`, nunca por `message`.
 
-## Arquitectura
+## 🏛️ Arquitectura
 
 Arquitectura limpia con dependencias apuntando hacia adentro:
 
@@ -193,7 +217,7 @@ infrastructure -> application -> domain
 - `app/application`: un caso de uso por acción de negocio, puertos inyectados.
 - `app/infrastructure`: repositorios SQLAlchemy, routers FastAPI, JWT, bcrypt, notifier.
 
-## Reglas de dominio
+## 📋 Reglas de dominio
 
 - Los líderes crean rutas, actividades, cuentas de miembro, asignaciones y firman la
   finalización.
@@ -204,8 +228,17 @@ infrastructure -> application -> domain
 - Las rutas vacías no pueden firmarse.
 - Las actividades obligatorias pendientes bloquean la firma; las opcionales pendientes no.
 
-## Pendientes
+## 🚧 Pendientes
 
 - Cobertura de pruebas del frontend (la UI React/Vite en `frontend/` aún sin tests).
 - Features del roadmap: certificados, mapeo de skills con IA, auto-inscripción,
   integración HRIS, prerrequisitos.
+
+---
+
+<div align="center">
+
+Desarrollado por **[Jotive.dev](https://dev.jotive.com.co)** ·
+[CI/CD](docs/DEPLOYMENT.md) · [Backend](backend/README.md) · [Roadmap](docs/ROADMAP.md)
+
+</div>
