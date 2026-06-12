@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: learnflow-db
+    environment:
+      POSTGRES_USER: learnflow
+      POSTGRES_PASSWORD: learnflow
+      POSTGRES_DB: learnflow
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U learnflow"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  migrate:
+    build: ./backend
+    command: sh -c "alembic upgrade head && python -m app.infrastructure.db.seed"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend:
+    build: ./backend
+    container_name: learnflow-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend-dev:
+    build: ./backend
+    container_name: learnflow-backend-dev
+    command: uvicorn app.main:app --reload --reload-dir app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: learnflow-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+    name: learnflow-pgdata
+
+networks:
+  default:
+    name: learnflow

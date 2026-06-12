@@ -1,0 +1,4 @@
+[run]
+omit =
+    app/infrastructure/email/ses_notifier.py
+    app/infrastructure/email/resend_notifier.py

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnFlow — Instalación</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#1a212b; --panel2:#222b38; --ink:#e6edf3; --muted:#9aa7b4;
+    --brand:#4f9cf9; --brand2:#7c5cff; --ok:#3fb950; --warn:#d29922; --line:#2d3743; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;
+    background:radial-gradient(1200px 600px at 80% -10%,#1b2735 0%,var(--bg) 55%);
+    color:var(--ink);line-height:1.65}
+  .wrap{max-width:900px;margin:0 auto;padding:48px 24px 80px}
+  nav{font-size:.85rem;margin-bottom:28px}
+  nav a{color:var(--brand);text-decoration:none}
+  .badge{display:inline-block;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ok);border:1px solid var(--line);padding:6px 14px;border-radius:999px;margin-bottom:18px}
+  h1{font-size:2.3rem;margin:0 0 10px;font-weight:800}
+  h2{font-size:1.45rem;margin:46px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  h3{font-size:1.05rem;margin:22px 0 8px;color:var(--brand)}
+  p,li{color:#cdd7e1}
+  .lead{color:var(--muted);font-size:1.1rem}
+  code{background:#0b0f14;border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:.9em;color:#9fd0ff}
+  pre{background:#0b0f14;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;
+    font-size:.86rem;color:#c8d3de;line-height:1.55;position:relative}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;margin:18px 0}
+  .note{background:linear-gradient(135deg,rgba(210,153,34,.12),rgba(210,153,34,.03));
+    border:1px solid rgba(210,153,34,.45);border-radius:var(--radius);padding:16px 20px;margin:18px 0;font-size:.95rem}
+  .note b{color:var(--warn)}
+  .ok{background:linear-gradient(135deg,rgba(63,185,80,.12),rgba(63,185,80,.03));
+    border:1px solid rgba(63,185,80,.45);border-radius:var(--radius);padding:16px 20px;margin:18px 0}
+  .ok b{color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;text-transform:uppercase;font-size:.72rem;letter-spacing:.06em}
+  .step{display:flex;gap:14px;margin:14px 0;align-items:flex-start}
+  .sn{width:30px;height:30px;border-radius:50%;background:var(--ok);color:#04140a;display:grid;
+    place-items:center;font-weight:800;flex:none}
+  .chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0;font-size:.9rem}
+  .cbox{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 14px}
+  .arr{color:var(--ok);font-weight:800}
+  footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+  footer a{color:var(--brand);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav><a href="index.html">← Instructivos</a></nav>
+  <span class="badge">⚙️ Instalación</span>
+  <h1>Instalación</h1>
+  <p class="lead">Vía recomendada: Docker. Un solo comando levanta todo en orden. No necesitas
+    Python ni Node instalados localmente.</p>
+
+  <h2>Requisitos previos</h2>
+  <table>
+    <tr><th>Herramienta</th><th>Versión mínima</th><th>Verificar</th></tr>
+    <tr><td>Docker Engine</td><td>24+</td><td><code>docker --version</code></td></tr>
+    <tr><td>Docker Compose v2</td><td>2.20+</td><td><code>docker compose version</code></td></tr>
+    <tr><td>GNU Make <em>(opcional)</em></td><td>4+</td><td><code>make --version</code></td></tr>
+  </table>
+  <div class="note"><b>Windows:</b> instalar Make con <code>winget install GnuWin32.Make</code> o
+    <code>choco install make</code>. Sin Make, usar los comandos <code>docker compose ...</code> directamente.</div>
+
+  <h2>Opción A — Docker (recomendado)</h2>
+  <p>Compose encadena los servicios con healthchecks, sin pasos manuales en secuencia:</p>
+  <div class="chain">
+    <div class="cbox">db <small>(espera sano)</small></div><span class="arr">→</span>
+    <div class="cbox">migrate <small>(Alembic + seed)</small></div><span class="arr">→</span>
+    <div class="cbox">backend</div><span class="arr">→</span>
+    <div class="cbox">frontend</div>
+  </div>
+  <pre>docker compose up --build</pre>
+
+  <table>
+    <tr><th>Acción</th><th>Con Make</th><th>Sin Make</th></tr>
+    <tr><td>Levantar API + dependencias</td><td><code>make backend</code></td><td><code>docker compose up --build backend</code></td></tr>
+    <tr><td>API en modo recarga</td><td><code>make backend-dev</code></td><td><code>docker compose up --build backend-dev</code></td></tr>
+    <tr><td>Solo base de datos</td><td><code>make db</code></td><td><code>docker compose up -d --wait db</code></td></tr>
+    <tr><td>Migraciones + seed</td><td><code>make seed</code></td><td><code>docker compose run --rm migrate</code></td></tr>
+    <tr><td>Frontend (UI)</td><td>—</td><td><code>docker compose up --build frontend</code></td></tr>
+  </table>
+
+  <div class="ok"><b>Listo.</b> Documentación interactiva del backend en
+    <code>http://localhost:8000/docs</code> · Frontend en <code>http://localhost:3000</code>.</div>
+
+  <h2>Opción B — Backend en local (sin Docker)</h2>
+  <p>Para iterar el backend con el intérprete del host:</p>
+  <div class="step"><div class="sn">1</div><div>
+    <h3>Crear entorno e instalar dependencias</h3>
+    <pre>cd backend
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install -r requirements-dev.txt</pre>
+    <p style="font-size:.9rem;color:var(--muted)">En Linux/macOS usar <code>.venv/bin/python</code> en lugar de <code>.venv/Scripts/python.exe</code>.</p>
+  </div></div>
+  <div class="step"><div class="sn">2</div><div>
+    <h3>Levantar la base de datos del contenedor y migrar</h3>
+    <pre>docker compose up -d --wait db        # Postgres sano
+docker compose run --rm migrate       # migraciones + seed</pre>
+  </div></div>
+  <div class="step"><div class="sn">3</div><div>
+    <h3>Servir la API</h3>
+    <pre>cd backend
+.venv/Scripts/python.exe -m uvicorn app.main:app --reload</pre>
+  </div></div>
+
+  <h2>Variables de entorno</h2>
+  <p>Se leen de <code>.env</code> en la raíz. Partir de <code>.env.example</code>.</p>
+  <table>
+    <tr><th>Variable</th><th>Por defecto</th><th>Propósito</th></tr>
+    <tr><td><code>DATABASE_URL</code></td><td>— (requerida)</td><td>DSN de Postgres</td></tr>
+    <tr><td><code>JWT_SECRET</code></td><td>— (requerida)</td><td>Clave de firma HS256 (≥ 32 bytes)</td></tr>
+    <tr><td><code>JWT_EXPIRES_MINUTES</code></td><td>60</td><td>Vida del access token</td></tr>
+    <tr><td><code>API_PREFIX</code></td><td>/api/v1</td><td>Base de montaje de los routers</td></tr>
+    <tr><td><code>CORS_ORIGINS</code></td><td>vacío</td><td>Orígenes permitidos, separados por coma</td></tr>
+    <tr><td><code>CORS_ALLOW_CREDENTIALS</code></td><td>true</td><td>Credenciales en CORS</td></tr>
+    <tr><td><code>LOG_LEVEL</code></td><td>INFO</td><td>Nivel de logging</td></tr>
+    <tr><td><code>LOG_JSON</code></td><td>false</td><td>true = logs JSON; false = texto</td></tr>
+    <tr><td><code>LOG_FILE</code></td><td>vacío</td><td>Archivo rotativo; vacío = solo stdout</td></tr>
+    <tr><td><code>LOG_MAX_BYTES</code></td><td>5000000</td><td>Tamaño de rotación</td></tr>
+    <tr><td><code>LOG_BACKUP_COUNT</code></td><td>5</td><td>Archivos rotados conservados</td></tr>
+  </table>
+
+  <h2>Usuarios semilla</h2>
+  <p>El paso de seed crea cuentas listas para probar el login:</p>
+  <table>
+    <tr><th>Rol</th><th>Email</th><th>Contraseña</th></tr>
+    <tr><td>LEADER</td><td><code>leader@learnflow.dev</code></td><td><code>leader-pass</code></td></tr>
+    <tr><td>MEMBER</td><td><code>member1@learnflow.dev</code></td><td><code>member-pass</code></td></tr>
+    <tr><td>MEMBER</td><td><code>member2@learnflow.dev</code></td><td><code>member-pass</code></td></tr>
+  </table>
+
+  <h2>Pruebas</h2>
+  <pre>cd backend
+.venv/Scripts/python.exe -m pytest                 # suite + cobertura
+.venv/Scripts/python.exe -m pytest -m "not pg"     # excluir Postgres (testcontainers)
+.venv/Scripts/python.exe -m flake8 app tests
+.venv/Scripts/python.exe -m ruff check app tests</pre>
+  <div class="note"><b>Nota:</b> las pruebas marcadas <code>pg</code> levantan un Postgres real vía
+    testcontainers y requieren Docker. La cobertura se exige en <code>pytest.ini</code> con
+    <code>--cov-fail-under=75</code> (actual ~97%).</div>
+
+  <footer>
+    LearnFlow — instalación · prueba técnica backend.
+  </footer>
+</div>
+</body>
+</html>

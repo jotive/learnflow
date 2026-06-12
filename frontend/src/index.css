@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-crehana-mora: var(--color-mora);
+  --color-crehana-coral: var(--color-coral);
+  --color-crehana-menta: var(--color-menta);
+  --color-crehana-darkBg: var(--color-darkBg);
+  --color-crehana-cardBorder: var(--color-cardBorder);
+  
+  /* Mapeo dinámico a variables CSS */
+  --color-crehana-bg: var(--bg-primary);
+  --color-crehana-card: var(--bg-card);
+  --color-crehana-panel: var(--bg-panel);
+  --color-crehana-border: var(--border-color);
+  --color-crehana-text: var(--text-color);
+  --color-crehana-text-muted: var(--text-muted);
+}
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color-scheme: light dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Tema Claro */
+  --bg-primary: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-panel: #F1F5F9;
+  --border-color: #E2E8F0;
+  --text-color: #0F172A;
+  --text-muted: #475569;
+
+  --color-mora: #4F46E5;
+  --color-coral: #DC2626;
+  --color-menta: #059669;
+  --color-darkBg: #F8FAFC;
+  --color-cardBorder: #E2E8F0;
+}
+
+.dark {
+  /* Tema Oscuro */
+  --bg-primary: #0F111A;
+  --bg-card: #222736;
+  --bg-panel: #1A1D27;
+  --border-color: #2D3748;
+  --text-color: #E2E8F0;
+  --text-muted: #94A3B8;
+
+  --color-mora: #818CF8;
+  --color-coral: #F87171;
+  --color-menta: #34D399;
+  --color-darkBg: #0F111A;
+  --color-cardBorder: #2D3748;
+}
+
+/* Transiciones suaves en cambios de tema */
+* {
+  transition-property: background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-color);
+}
+
+/* Clases de animación micro-interactivas */
+.hover-scale {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Personalización de barra de progreso */
+progress::-webkit-progress-value {
+  background-color: var(--color-crehana-menta);
+  border-radius: 9999px;
+  transition: width 0.4s ease-in-out;
+}
+
+progress::-webkit-progress-bar {
+  background-color: var(--border-color);
+  border-radius: 9999px;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(24, 21, 45, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(46, 41, 78, 0.4);
+}
+
+.dark .glass {
+  background: rgba(24, 21, 45, 0.65);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.shadow-glow-mora {
+  box-shadow: 0 4px 20px rgba(75, 34, 244, 0.08);
+}
+.shadow-glow-mora:hover {
+  box-shadow: 0 8px 25px rgba(75, 34, 244, 0.2);
+}
+
+.shadow-glow-menta {
+  box-shadow: 0 4px 20px rgba(0, 232, 143, 0.08);
+}
+.shadow-glow-menta:hover {
+  box-shadow: 0 8px 25px rgba(0, 232, 143, 0.2);
+}
+
+.shadow-glow-coral {
+  box-shadow: 0 4px 20px rgba(255, 63, 86, 0.08);
+}
+.shadow-glow-coral:hover {
+  box-shadow: 0 8px 25px rgba(255, 63, 86, 0.2);
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
