@@ -32,3 +32,8 @@ Thumbs.db
 
 # Private design spec must never live in repo (lives in vault)
 DESIGN.md
+
+# Local working docs (not part of the deliverable)
+CLAUDE.md
+docs/*.pdf
+docs/superpowers/
