@@ -21,23 +21,30 @@ Today that lives in spreadsheets plus manual reminders: no visibility, no enforc
 |---|---|
 | **User** | id · email · name · role (LEADER \| MEMBER) · hashed_password · created_at |
 | **LearningPath** | id · title · description · created_by · completed_at? · created_at |
-| **Activity** | id · path_id · title · description? · priority (MANDATORY \| OPTIONAL) · status (NOT_STARTED \| IN_PROGRESS \| COMPLETED) · assigned_to? · position · timestamps |
+| **Activity** | id · path_id · title · description? · priority (HIGH \| MEDIUM \| LOW) · is_mandatory (bool) · status (NOT_STARTED \| IN_PROGRESS \| COMPLETED) · assigned_to? · position · timestamps |
 
 ### Derived properties on LearningPath (computed on read)
 
 - `progress_percentage` = completed activities / total activities
-- `is_compliant` = every **MANDATORY** activity is COMPLETED
+- `is_compliant` = every activity flagged `is_mandatory` is COMPLETED
 - `activity_count`
 
+Two independent task attributes, not one overloaded field:
+
+- `priority` (HIGH \| MEDIUM \| LOW) — urgency. This is the dimension the list-tasks
+  endpoint filters on, alongside `status`.
+- `is_mandatory` (bool) — whether the task must be finished for the path to count as
+  compliant. Independent of how urgent it is.
+
 **Core distinction — compliance ≠ completion.** A path can be at 70% progress yet
-100% compliant (all mandatory done, optionals skipped). This is what L&D actually
+100% compliant (all mandatory done, non-mandatory skipped). This is what L&D actually
 cares about and what separates the product from a generic to-do list.
 
 ## Business invariants
 
 1. **Compliance gating** — a leader signs off a path with `complete`. Blocked while any
-   mandatory activity is pending → `PathHasPendingMandatoryActivitiesError`. Pending
-   *optional* activities do **not** block.
+   `is_mandatory` activity is pending → `PathHasPendingMandatoryActivitiesError`. Pending
+   non-mandatory activities do **not** block, regardless of their priority.
 2. **Role permissions** — a member may only change the status of activities assigned to
    them → `PermissionDeniedError`. A leader has full CRUD on paths/activities plus
    assignment and member provisioning.

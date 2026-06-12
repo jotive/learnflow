@@ -28,7 +28,8 @@ finished and only *optional* ones remain.
 
 - **Backend:** Python · FastAPI · SQLAlchemy 2.0 · Pydantic v2 · PostgreSQL · Alembic
 - **Frontend:** Next.js (App Router)
-- **Infra (local):** Docker Compose — `db` → `migrate` → `backend` → `frontend`
+- **Quality:** pytest · flake8 · ruff · black · isort
+- **Infra (local):** Docker Compose (multistage Dockerfile) — `db` → `migrate` → `backend` → `frontend`
 
 ## Quickstart
 

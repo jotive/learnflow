@@ -11,15 +11,21 @@ the product exists to serve.
 
 ## Decision
 
-Each `Activity` carries a `priority` (`MANDATORY` | `OPTIONAL`). The `LearningPath`
-exposes two independent derived properties, computed on read, never stored:
+Keep two independent task attributes instead of overloading one field:
+
+- `priority` (`HIGH` | `MEDIUM` | `LOW`) — urgency; the dimension the list endpoint
+  filters on alongside `status`.
+- `is_mandatory` (bool) — whether the task must be finished for compliance.
+
+The `LearningPath` exposes two derived properties, computed on read, never stored:
 
 - `progress_percentage` = completed activities / total activities
-- `is_compliant` = every MANDATORY activity is COMPLETED
+- `is_compliant` = every `is_mandatory` activity is COMPLETED
 
 Path sign-off (`POST /paths/{id}/complete`) is gated on **compliance**, not on
-completion: it is blocked while any mandatory activity is pending
-(`PathHasPendingMandatoryActivitiesError`), but pending optional activities do not block.
+completion: blocked while any mandatory activity is pending
+(`PathHasPendingMandatoryActivitiesError`); pending non-mandatory activities do not
+block, regardless of priority.
 
 ## Consequences
 

@@ -36,8 +36,8 @@ Base URL `…/` · JSON · JWT bearer auth except `login`.
 
 ## Filters (test requirement)
 
-`GET /paths/{id}/activities?status=IN_PROGRESS&priority=MANDATORY` — both optional,
-combinable.
+`GET /paths/{id}/activities?status=IN_PROGRESS&priority=HIGH` — both optional,
+combinable. Response also carries the path `progress_percentage` (completion %).
 
 ## Error mapping
 
