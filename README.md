@@ -17,7 +17,8 @@ actividad obligatoria está completada.
 - Infra: Docker Compose con `db -> migrate -> backend -> frontend`
 
 Detalle del backend (arquitectura, variables de entorno, pruebas, migraciones) en
-[`backend/README.md`](backend/README.md).
+[`backend/README.md`](backend/README.md). Notas de CI/CD y versionado de
+toolchain en [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ## Requisitos previos
 
@@ -40,7 +41,7 @@ Solo si trabajas el frontend fuera de Docker:
 
 | Herramienta | Versión mínima | Necesario para |
 |---|---|---|
-| Bun | 1.1+ | `bun install` y `bun dev` |
+| Bun | 1.2+ | `bun install` y `bun dev` (versión fijada en `.bun-version`) |
 
 En Windows, instalar Make con `winget install GnuWin32.Make` o `choco install make`. Sin
 Make, ejecutar los comandos `docker compose ...` directamente (la columna equivalente está
