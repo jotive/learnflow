@@ -53,7 +53,8 @@ head` (and a seed step) and exits before the backend starts. Service order:
 - The backend container never runs migrations on boot — no race when scaling replicas.
 - Slightly more moving parts locally (an extra service) than auto-create — accepted as
   the production-faithful choice.
-- Tests use a separate test database with the same migrations.
+- Integration tests run against in-memory SQLite created from the SQLAlchemy metadata —
+  fast and dependency-free; Alembic owns the schema only for real (Postgres) environments.
 
 ---
 
